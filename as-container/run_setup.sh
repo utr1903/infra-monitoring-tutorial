@@ -51,6 +51,9 @@ sudo docker run \
   -e "LOG_LEVEL=$FLUENTD_LOGGING_LEVEL" \
   newrelic/newrelic-fluentd-docker:latest
 
+# Create directory for random logger
+sudo mkdir random-logger
+
 # Create Dockerfile
 echo 'FROM ubuntu:latest
 
@@ -61,7 +64,7 @@ RUN apt-get update
 RUN apt-get install -y openssl
 
 ENTRYPOINT ["bash", "/app/random_logger.sh"]' \
-> Dockerfile
+> random-logger/Dockerfile
 
 # Create logger script
 echo '#!/bin/bash
@@ -71,11 +74,11 @@ do
   openssl rand -base64 16
   sleep 2
 done' \
-> random_logger.sh
+> random-logger/random_logger.sh
 
 # Build random logger image
 sudo docker build \
-  --tag "random-logger" .
+  --tag "random-logger" ./random-logger
 
 # Start random logger
 sudo docker run \
